@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -45,5 +48,27 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email)
                 .map(UserDTO::new)
                 .orElse(null);
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(UserDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDTO getUser(Long id) {
+        return userRepository.findById(id)
+                .map(UserDTO::new)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("User not found");
+        }
+        userRepository.deleteById(id);
     }
 }
