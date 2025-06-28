@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "applications")
@@ -31,7 +31,7 @@ public class Application {
 
     @Column(name = "applied_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date appliedAt;
+    private LocalDateTime appliedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
@@ -43,7 +43,7 @@ public class Application {
 
     @PrePersist
     protected void onCreate() {
-        appliedAt = new Date();
+        appliedAt = LocalDateTime.now();
         if (status == null) {
             status = ApplicationStatus.PENDING;
         }
